@@ -170,7 +170,6 @@ rm newscoop/vendor/jms/serializer/.gitignore
 rm newscoop/vendor/knplabs/knp-components/.gitignore
 rm newscoop/vendor/knplabs/knp-paginator-bundle/Knp/Bundle/PaginatorBundle/.gitignore
 rm newscoop/vendor/kriswallsmith/buzz/.gitignore
-rm newscoop/vendor/monolog/monolog/.gitignore
 rm newscoop/vendor/noiselabs/smarty-bundle/NoiseLabs/Bundle/SmartyBundle/.gitignore
 rm newscoop/vendor/phpcollection/phpcollection/.gitignore
 rm newscoop/vendor/phpoption/phpoption/.gitignore
