@@ -1964,6 +1964,7 @@ chmod -x newscoop/install/sample_templates/quetzal/templates/set_quetzal/_tpl/si
 chmod -x newscoop/install/sample_templates/rockstar/templates/set_rockstar/auth_password-restore-finish.tpl
 chmod -x newscoop/install/sample_templates/rockstar/templates/set_rockstar/assets/css/fancybox/blank.gif
 chmod -x newscoop/vendor/behat/behat/src/Behat/Behat/Util/data/x9b.php
+chmod -x newscoop/install/sql/upgrade/3.5.x/tables.sql
 
 fi
 
