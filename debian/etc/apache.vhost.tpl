@@ -9,7 +9,7 @@
       Alias /javascript /var/lib/newscoop/javascript/
 
       <Directory /var/lib/newscoop>
-              Options -Indexes FollowSymLinks MultiViews
+              Options -Indexes +FollowSymLinks +MultiViews
               AllowOverride All
               Order allow,deny
               Allow from all
