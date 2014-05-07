@@ -8,19 +8,20 @@ Homepage: http://www.sourcefabric.org/en/newscoop
 
 Package: newscoop
 Architecture: all
-Depends: apache2 | httpd,
+Depends: apache2,
  curl,
- graphicsmagick | imagemagick,
- libapache2-mod-php5 | php5,
- mysql-client | virtual-mysql-client,
+ graphicsmagick,
+ graphicsmagick-imagemagick-compat,
+ libapache2-mod-php5,
+ mysql-client,
  php5-mysql,
  php5-cli,
  php5-gd,
  ttf-dejavu-core,
  wwwconfig-common,
  ${misc:Depends}
-Recommends: php-apc | php5-xcache
-Suggests: mysql-server | virtual-mysql-server,  default-mta | mail-transport-agent, flite, geonames-city-data, newscoop-sample-data
+Recommends: php-apc
+Suggests: mysql-server, exim4 | postfix, flite, geonames-city-data, newscoop-sample-data
 Description: Open content management system for professional journalists
  Features for the modern newsroom include multiple author management,
  issue-and-section based publishing, geolocation and multilingual content 
