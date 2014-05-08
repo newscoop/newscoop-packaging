@@ -10,9 +10,27 @@ fi
 case "$1" in
   install|upgrade)
 
+    # Remove localization symlinks from old installs
+    if [ -L /var/lib/newscoop/admin-files/lang/by ]; then
+     echo "Removing old symlinks..." >&2
+     rm -f /var/lib/newscoop/admin-files/lang/by
+    fi
+
+    if [ -L /var/lib/newscoop/admin-files/lang/cz ]; then
+     rm -f /var/lib/newscoop/admin-files/lang/cz
+    fi
+
+    if [ -L /var/lib/newscoop/admin-files/lang/ge ]; then
+     rm -f /var/lib/newscoop/admin-files/lang/ge
+    fi
+
+    if [ -L /var/lib/newscoop/admin-files/lang/kr ]; then
+     rm -f /var/lib/newscoop/admin-files/lang/kr
+    fi
+
     # Remove plugin localization symlinks from old installs
     if [ -L /var/lib/newscoop/plugins/poll/admin-files/lang/by ]; then
-     echo "Removing old symlinks..." >&2
+     echo "Removing old plugin symlinks..." >&2
      rm -f /var/lib/newscoop/plugins/poll/admin-files/lang/by
     fi
 
