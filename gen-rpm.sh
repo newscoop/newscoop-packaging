@@ -25,47 +25,6 @@ cd ${TMP}/
 # workarounds for Newscoop 4.2.2 spaces in filenames, symbolic links etc.
 mv newscoop-${VERSION}/newscoop/vendor/symfony/symfony/src/Symfony/Component/Finder/Tests/Fixtures/with\ space/ newscoop-${VERSION}/newscoop/vendor/symfony/symfony/src/Symfony/Component/Finder/Tests/Fixtures/with_space/
 
-cd /tmp/newscoop-${VERSION}/newscoop/admin-files/lang/
-rm by
-cp -r be by
-
-rm cz
-cp -r cs cz
-
-rm ge
-cp -r ka ge
-
-rm kr
-cp -r ko kr
-
-cd /tmp/newscoop-${VERSION}/newscoop/plugins/poll/admin-files/lang/
-rm by
-cp -r be by
-
-rm cz
-cp -r cs cz
-
-rm ge
-cp -r ka ge
-
-rm kr
-cp -r ko kr
-
-cd /tmp/newscoop-${VERSION}/newscoop/plugins/recaptcha/admin-files/lang/
-rm by
-cp -r be by
-
-rm cz
-cp -r cs cz
-
-rm ge
-cp -r ka ge
-
-rm kr
-cp -r ko kr
-
-cd /tmp
-
 # end workarounds
 
 tar czf /tmp/rpm_newscoop-${VERSION}.tar.gz newscoop-${VERSION}/
