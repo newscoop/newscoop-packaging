@@ -132,9 +132,6 @@ case "$1" in
     dpkg-statoverride --list $datadir/conf &>/dev/null || \
     dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0750 $datadir/conf
 
-    dpkg-statoverride --list $datadir/files &>/dev/null || \
-    dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0755 $datadir/files
-
     dpkg-statoverride --list $datadir/images &>/dev/null || \
     dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0755 $datadir/images
 
@@ -155,6 +152,9 @@ case "$1" in
 
     dpkg-statoverride --list $datadir/public/bundles &>/dev/null || \
     dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0755 $datadir/public/bundles
+
+    dpkg-statoverride --list $datadir/public/files &>/dev/null || \
+    dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0755 $datadir/public/files
 
     dpkg-statoverride --list $datadir/public/pdf &>/dev/null || \
     dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0755 $datadir/public/pdf
