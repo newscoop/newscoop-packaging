@@ -11,6 +11,7 @@
       <Directory /var/lib/newscoop>
               Options -Indexes +FollowSymLinks -MultiViews
               AllowOverride All
+              #Uncomment the line below only for Apache 2.4 or later
               #Require all granted
       </Directory>
 </VirtualHost> 

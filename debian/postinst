@@ -37,6 +37,15 @@ case "$1" in
     php="php5"
     dohtaccess=""
 
+    # get the major/minor version of Apache installed locally
+    APACHEVERSION=$(dpkg-query -f '${Version}' -W 'apache2' | cut -c 1-3)
+
+    # tweak access settings if Apache 2.4 is installed
+    if [ "$APACHEVERSION" = "2.4" ] ; then
+      echo "Apache 2.4 detected, adjusting access configuration..."
+      sed -i "s/#Require all granted/Require all granted/" ${includefile} ${a2tplfile}
+    fi
+
     #  clean up previous configurations
     if [ -L /etc/$webserver/conf.d/newscoop.conf ]; then
       rm -f /etc/$webserver/conf.d/newscoop.conf || true
@@ -53,7 +62,7 @@ case "$1" in
       rm -f /etc/cron.d/newscoop || true
     fi
 
-    # APACHE config
+    # Install new Apache configuration
     db_get newscoop/apache-setup
     if [ "$RET" == "system-wide (all vhosts)" ]; then
       if [ ! -d /etc/$webserver/conf.d/ ]; then
