@@ -1,0 +1,79 @@
+#!/bin/bash
+#preinst script for newscoop
+
+set -e
+
+if [ "$DPKG_DEBUG" = "developer" ]; then
+    set -x
+fi
+
+case "$1" in
+  install|upgrade)
+
+    # Remove localization symlinks from old installs
+    if [ -L /var/lib/newscoop/admin-files/lang/by ]; then
+     echo "Removing old symlinks..." >&2
+     rm -f /var/lib/newscoop/admin-files/lang/by
+    fi
+
+    if [ -L /var/lib/newscoop/admin-files/lang/cz ]; then
+     rm -f /var/lib/newscoop/admin-files/lang/cz
+    fi
+
+    if [ -L /var/lib/newscoop/admin-files/lang/ge ]; then
+     rm -f /var/lib/newscoop/admin-files/lang/ge
+    fi
+
+    if [ -L /var/lib/newscoop/admin-files/lang/kr ]; then
+     rm -f /var/lib/newscoop/admin-files/lang/kr
+    fi
+
+    # Remove plugin localization symlinks from old installs
+    if [ -L /var/lib/newscoop/plugins/poll/admin-files/lang/by ]; then
+     echo "Removing old plugin symlinks..." >&2
+     rm -f /var/lib/newscoop/plugins/poll/admin-files/lang/by
+    fi
+
+    if [ -L /var/lib/newscoop/plugins/poll/admin-files/lang/cz ]; then
+     rm -f /var/lib/newscoop/plugins/poll/admin-files/lang/cz
+    fi
+
+    if [ -L /var/lib/newscoop/plugins/poll/admin-files/lang/ge ]; then
+     rm -f /var/lib/newscoop/plugins/poll/admin-files/lang/ge
+    fi
+
+    if [ -L /var/lib/newscoop/plugins/poll/admin-files/lang/kr ]; then
+     rm -f /var/lib/newscoop/plugins/poll/admin-files/lang/kr
+    fi
+
+    if [ -L /var/lib/newscoop/plugins/recaptcha/admin-files/lang/by ]; then
+     rm -f /var/lib/newscoop/plugins/recaptcha/admin-files/lang/by
+    fi
+
+    if [ -L /var/lib/newscoop/plugins/recaptcha/admin-files/lang/cz ]; then
+     rm -f /var/lib/newscoop/plugins/recaptcha/admin-files/lang/cz
+    fi
+
+    if [ -L /var/lib/newscoop/plugins/recaptcha/admin-files/lang/ge ]; then
+     rm -f /var/lib/newscoop/plugins/recaptcha/admin-files/lang/ge
+    fi
+
+    if [ -L /var/lib/newscoop/plugins/recaptcha/admin-files/lang/kr ]; then
+     rm -f /var/lib/newscoop/plugins/recaptcha/admin-files/lang/kr
+    fi
+
+  ;;
+
+  abort-upgrade)
+    echo "Upgrade aborting..." >&2
+  ;;
+
+  *)
+       echo "preinst called with unknown argument \`$1'" >&2
+       exit 1
+  ;;
+esac
+
+#DEBHELPER#
+
+exit 0

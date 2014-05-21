@@ -37,20 +37,32 @@ case "$1" in
     php="php5"
     dohtaccess=""
 
+    # get the major/minor version of Apache installed locally
+    APACHEVERSION=$(dpkg-query -f '${Version}' -W 'apache2' | cut -c 1-3)
+
+    # tweak access settings if Apache 2.4 is installed
+    if [ "$APACHEVERSION" = "2.4" ] ; then
+      echo "Apache 2.4 detected, adjusting access configuration..."
+      sed -i "s/#Require all granted/Require all granted/" ${includefile} ${a2tplfile}
+    fi
+
     #  clean up previous configurations
     if [ -L /etc/$webserver/conf.d/newscoop.conf ]; then
       rm -f /etc/$webserver/conf.d/newscoop.conf || true
       restart="$webserver $restart"
     fi
+
     if [ -f /etc/$webserver/sites-available/newscoop-vhost ]; then
-      a2dissite newscoop-vhost &>/dev/null || true
-      restart="$webserver $restart"
+      a2dissite newscoop-vhost
+    elif [ -f /etc/$webserver/sites-available/newscoop-vhost.conf ]; then
+      a2dissite newscoop-vhost.conf
     fi
+
     if [ -L /etc/cron.d/newscoop ]; then
       rm -f /etc/cron.d/newscoop || true
     fi
 
-    # APACHE config
+    # Install new Apache configuration
     db_get newscoop/apache-setup
     if [ "$RET" == "system-wide (all vhosts)" ]; then
       if [ ! -d /etc/$webserver/conf.d/ ]; then
@@ -58,10 +70,11 @@ case "$1" in
       fi
       if [ ! -e /etc/$webserver/conf.d/newscoop.conf ]; then
         ln -s ${includefile} /etc/$webserver/conf.d/newscoop.conf
-        a2enmod rewrite &>/dev/null || true
+        a2enmod rewrite
         restart="$webserver $restart"
       fi
       dohtaccess="/newscoop"
+
     elif [ "$RET" == "dedicated v-host" ]; then
       db_get newscoop/apache-servername
       SN=$RET
@@ -71,10 +84,11 @@ case "$1" in
       if [ ! -d /etc/$webserver/sites-available/ ]; then
         install -d -m755 /etc/$webserver/sites-available/
       fi
+
       sed -e "s/__SERVER_ADMIN__/${SA}/;s/__SERVER_NAME__/${SN}/" \
-        ${a2tplfile} > /etc/$webserver/sites-available/newscoop-vhost
-      a2ensite newscoop-vhost &>/dev/null
-      a2enmod rewrite &>/dev/null || true
+        ${a2tplfile} > /etc/$webserver/sites-available/newscoop-vhost.conf
+      a2ensite newscoop-vhost.conf
+      a2enmod rewrite
       restart="$webserver $restart"
       dohtaccess="/"
     fi
@@ -127,9 +141,6 @@ case "$1" in
     dpkg-statoverride --list $datadir/conf &>/dev/null || \
     dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0750 $datadir/conf
 
-    dpkg-statoverride --list $datadir/public/files &>/dev/null || \
-    dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0755 $datadir/public/files
-
     dpkg-statoverride --list $datadir/images &>/dev/null || \
     dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0755 $datadir/images
 
@@ -145,17 +156,23 @@ case "$1" in
     dpkg-statoverride --list $datadir/log &>/dev/null || \
     dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0750 $datadir/log
 
-    dpkg-statoverride --list $datadir/pdf &>/dev/null || \
-    dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0750 $datadir/pdf
-
     dpkg-statoverride --list $datadir/plugins &>/dev/null || \
     dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0750 $datadir/plugins
 
-    dpkg-statoverride --list $datadir/themes &>/dev/null || \
-    dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0750 $datadir/themes
+    dpkg-statoverride --list $datadir/public/bundles &>/dev/null || \
+    dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0755 $datadir/public/bundles
+
+    dpkg-statoverride --list $datadir/public/files &>/dev/null || \
+    dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0755 $datadir/public/files
+
+    dpkg-statoverride --list $datadir/public/pdf &>/dev/null || \
+    dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0755 $datadir/public/pdf
 
     dpkg-statoverride --list $datadir/public/videos &>/dev/null || \
     dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0755 $datadir/public/videos
+
+    dpkg-statoverride --list $datadir/themes &>/dev/null || \
+    dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0750 $datadir/themes
 
     dpkg-statoverride --list $datadir/.htaccess &>/dev/null || \
     dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0644 $datadir/.htaccess
@@ -185,6 +202,38 @@ case "$1" in
 #
 #       # TODO: save db-account to newscoop-config.
 #   fi
+
+    # symlinks for sample data package
+
+    if [ ! -h /var/lib/newscoop/install/sample_data/files ] && [ -d /usr/share/newscoop-sample-data/files/ ]; then
+       ln -s /usr/share/newscoop-sample-data/files/ /var/lib/newscoop/install/sample_data/files
+    fi
+
+    if [ ! -h /var/lib/newscoop/install/sample_data/images ] && [ -d /usr/share/newscoop-sample-data/images/ ]; then
+       ln -s /usr/share/newscoop-sample-data/images/ /var/lib/newscoop/install/sample_data/images
+    fi
+
+    if [ ! -h /var/lib/newscoop/install/sql/campsite_demo_data.sql ] && [ -e /usr/share/newscoop-sample-data/sql/campsite_demo_data.sql ]; then
+       ln -s /usr/share/newscoop-sample-data/sql/campsite_demo_data.sql /var/lib/newscoop/install/sql/campsite_demo_data.sql
+    fi
+
+    if [ ! -h /var/lib/newscoop/install/sql/campsite_demo_prepare.sql ] && [ -e /usr/share/newscoop-sample-data/sql/campsite_demo_prepare.sql ]; then
+       ln -s /usr/share/newscoop-sample-data/sql/campsite_demo_prepare.sql /var/lib/newscoop/install/sql/campsite_demo_prepare.sql
+    fi
+
+    if [ ! -h /var/lib/newscoop/install/sql/campsite_demo_tables.sql ] && [ -e /usr/share/newscoop-sample-data/sql/campsite_demo_tables.sql ]; then
+       ln -s /usr/share/newscoop-sample-data/sql/campsite_demo_tables.sql /var/lib/newscoop/install/sql/campsite_demo_tables.sql
+    fi
+
+    # symlinks for geonames.org data package
+
+    if [ ! -h /var/lib/newscoop/install/sql/CityLocations.csv ] && [ -e /usr/share/geonames-city-data/CityLocations.csv ]; then
+       ln -s /usr/share/geonames-city-data/CityLocations.csv /var/lib/newscoop/install/sql/CityLocations.csv
+    fi
+
+    if [ ! -h /var/lib/newscoop/install/sql/CityNames.csv ] && [ -e /usr/share/geonames-city-data/CityNames.csv ]; then
+       ln -s /usr/share/geonames-city-data/CityNames.csv /var/lib/newscoop/install/sql/CityNames.csv
+    fi
 
     servers="apache2"
     . /usr/share/wwwconfig-common/restart.sh

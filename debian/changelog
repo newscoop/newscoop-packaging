@@ -1,3 +1,23 @@
+newscoop (4.2.3-1) unstable; urgency=low
+
+  * Upstream 4.2.3 release
+  * Don't enable MultiViews for Apache, see htaccess
+  * Our access configuration is deprecated in Apache 2.4
+
+ -- Daniel James <daniel@64studio.com>  Wed, 21 May 2014 12:23:01 +0100
+
+newscoop (4.2.2-1) unstable; urgency=low
+
+  * Upstream 4.2.2 release
+
+ -- Daniel James <daniel@64studio.com>  Wed, 23 Apr 2014 11:44:26 +0100
+
+newscoop (4.2.1-1) unstable; urgency=low
+
+  * Upstream 4.2.1 release
+
+ -- Daniel James <daniel@64studio.com>  Fri, 03 Jan 2014 11:07:09 +0000
+
 newscoop (4.2.0-1) unstable; urgency=low
 
   * Upstream 4.2 release

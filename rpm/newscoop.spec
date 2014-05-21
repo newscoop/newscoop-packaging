@@ -5,7 +5,7 @@
 
 Summary:        The open content management system for professional journalists
 Name:           newscoop
-Version:        4.2.0
+Version:        4.2.3
 Release:        1
 License:        GPLv3
 Packager:       Daniel James <daniel@64studio.com>
@@ -27,8 +27,6 @@ Requires: php
 Requires: php-cli
 Requires: php-gd
 Requires: php-mysql
-Requires: php-process
-Requires: php-xml
 Requires: curl
 Requires: mysql
 Requires: ImageMagick
@@ -160,6 +158,15 @@ fi
 
 
 %changelog
+* Wed May 21 2014 Daniel James <daniel@64studio.com>
+- Update for Newscoop 4.2.3
+
+* Wed Apr 23 2014 Daniel James <daniel@64studio.com>
+- Update for Newscoop 4.2.2
+
+* Fri Jan 3 2014 Daniel James <daniel@64studio.com>
+- Update for Newscoop 4.2.1
+
 * Wed Jun 5 2013 Daniel James <daniel@64studio.com>
 - Update for Newscoop 4.2.0
 

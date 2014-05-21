@@ -1,4 +1,4 @@
 newscoop-packaging
 ==================
 
-Newscoop Debian packaging (depreceated from 4.3).
+Debian and Red Hat packaging for https://github.com/sourcefabric/Newscoop/
