@@ -105,8 +105,8 @@ rm newscoop/install/sql/campsite_demo_tables.sql
 rm newscoop/install/sql/CityLocations.csv
 rm newscoop/install/sql/CityNames.csv
 
-### fixes for 4.2.2 ###
-if test "${UPSTREAMVERSION}" == "4.2.2"; then
+### fixes for 4.2.3 ###
+if test "${UPSTREAMVERSION}" == "4.2.3"; then
 
 sed -i "1s:sh:bash:" newscoop/vendor/swiftmailer/swiftmailer/test-suite/lib/simpletest/packages/build_tarball.sh
 
@@ -1965,6 +1965,7 @@ chmod -x newscoop/install/sample_templates/rockstar/templates/set_rockstar/auth_
 chmod -x newscoop/install/sample_templates/rockstar/templates/set_rockstar/assets/css/fancybox/blank.gif
 chmod -x newscoop/vendor/behat/behat/src/Behat/Behat/Util/data/x9b.php
 chmod -x newscoop/install/sql/upgrade/3.5.x/tables.sql
+chmod -x newscoop/install/sql/upgrade/4.2.x/2014.04.24/data-required.sql
 
 fi
 
