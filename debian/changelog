@@ -1,3 +1,9 @@
+newscoop (4.3.0-1) unstable; urgency=low
+
+  * First beta of Newscoop 4.3
+
+ -- Daniel James <daniel@64studio.com>  Tue, 08 Jul 2014 13:01:37 +0100
+
 newscoop (4.2.3-1) unstable; urgency=low
 
   * Upstream 4.2.3 release
