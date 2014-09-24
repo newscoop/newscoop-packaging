@@ -1,3 +1,9 @@
+newscoop (4.2.4-1) unstable; urgency=low
+
+  * Upstream 4.2.4 release
+
+ -- Daniel James <daniel@64studio.com>  Wed, 24 Sep 2014 16:40:24 +0100
+
 newscoop (4.2.3-1) unstable; urgency=low
 
   * Upstream 4.2.3 release
