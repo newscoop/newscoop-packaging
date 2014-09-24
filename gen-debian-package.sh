@@ -34,24 +34,26 @@ cd     /tmp/newscoop-$DEBVERSION
 
 echo -n " +++ building newscoop-${DEBVERSION}.deb in: "
 pwd
-echo " +++ downloading upstream release.."
+echo " +++ downloading upstream release..."
 
 if [ -f ${MIRRORPATH}/newscoop-$UPSTREAMVERSION.tar.gz ]; then
 	echo "using local file ${MIRRORPATH}/newscoop-$UPSTREAMVERSION.tar.gz"
   tar xzf ${MIRRORPATH}/newscoop-$UPSTREAMVERSION.tar.gz
+
 elif [ -f ${MIRRORPATH}/newscoop-$UPSTREAMDIST$SFOCUSTOM.tar.gz ]; then
 	echo "using local file ${MIRRORPATH}/newscoop-$UPSTREAMDIST$SFOCUSTOM.tar.gz"
   tar xzf ${MIRRORPATH}/newscoop-$UPSTREAMDIST$SFOCUSTOM.tar.gz
+
 elif [ -n "$CUSTOMURL" ]; then
-	echo "download ${CUSTOMURL}"
+	echo "...from ${CUSTOMURL}"
 	curl -L ${CUSTOMURL} \
 		| tee ${MIRRORPATH}/newscoop-$UPSTREAMDIST.tar.gz \
 		| tar xzf - || exit
 else
-	echo "download from sourceforge."
-  #curl -L http://downloads.sourceforge.net/project/newscoop/$UPSTREAMDIST/newscoop-$UPSTREAMVERSION.tar.gz | tar xzf -
-  curl -L http://downloads.sourceforge.net/project/newscoop/$UPSTREAMVERSION/newscoop-$UPSTREAMVERSION.tar.gz \
-		| tee ${MIRRORPATH}/newscoop-$UPSTREAMDIST$SFOCUSTOM.tar.gz \
+	echo "...from GitHub"
+
+  curl -L https://github.com/sourcefabric/Newscoop/releases/download/$UPSTREAMVERSION/newscoop-$UPSTREAMVERSION.tar.gz \
+		| tee ${MIRRORPATH}/newscoop-$UPSTREAMVERSION.tar.gz \
 		| tar xzf - || exit
 fi
 
@@ -105,9 +107,7 @@ rm newscoop/install/sql/campsite_demo_tables.sql
 rm newscoop/install/sql/CityLocations.csv
 rm newscoop/install/sql/CityNames.csv
 
-### fixes for 4.2.3 ###
-if test "${UPSTREAMVERSION}" == "4.2.3"; then
-
+### fixes for 4.2.4 ###
 sed -i "1s:sh:bash:" newscoop/vendor/swiftmailer/swiftmailer/test-suite/lib/simpletest/packages/build_tarball.sh
 
 rm -rf newscoop/vendor/behat/behat/.git/
@@ -232,7 +232,6 @@ chmod +x newscoop/vendor/doctrine/dbal/bin/doctrine-dbal
 chmod +x newscoop/vendor/knplabs/knp-components/bin/vendors.php
 chmod +x newscoop/vendor/doctrine/orm/bin/doctrine
 
-chmod -x newscoop/plugins/debate/template_engine/classes/DebateIssue.php
 chmod -x newscoop/application/console
 chmod -x newscoop/install/sample_templates/rockstar/templates/set_rockstar/assets/img/rating/star_full.png
 chmod -x newscoop/vendor/behat/behat/src/Behat/Behat/Util/data/x7e.php
@@ -1098,7 +1097,6 @@ chmod -x newscoop/install/sample_templates/quetzal/templates/set_quetzal/_tpl/si
 chmod -x newscoop/install/sample_templates/rockstar/templates/set_rockstar/auth_password-restore-finish.tpl
 chmod -x newscoop/install/sample_templates/rockstar/templates/set_rockstar/assets/css/fancybox/blank.gif
 chmod -x newscoop/vendor/behat/behat/src/Behat/Behat/Util/data/x9b.php
-chmod -x newscoop/plugins/debate/template_engine/classes/DebateIssue.php
 chmod -x newscoop/application/console
 chmod -x newscoop/install/sample_templates/rockstar/templates/set_rockstar/assets/img/rating/star_full.png
 chmod -x newscoop/vendor/behat/behat/src/Behat/Behat/Util/data/x7e.php
@@ -1966,8 +1964,6 @@ chmod -x newscoop/install/sample_templates/rockstar/templates/set_rockstar/asset
 chmod -x newscoop/vendor/behat/behat/src/Behat/Behat/Util/data/x9b.php
 chmod -x newscoop/install/sql/upgrade/3.5.x/tables.sql
 chmod -x newscoop/install/sql/upgrade/4.2.x/2014.04.24/data-required.sql
-
-fi
 
 ############################
 
