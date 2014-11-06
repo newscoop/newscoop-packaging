@@ -34,24 +34,26 @@ cd     /tmp/newscoop-$DEBVERSION
 
 echo -n " +++ building newscoop-${DEBVERSION}.deb in: "
 pwd
-echo " +++ downloading upstream release.."
+echo " +++ downloading upstream release..."
 
 if [ -f ${MIRRORPATH}/newscoop-$UPSTREAMVERSION.tar.gz ]; then
 	echo "using local file ${MIRRORPATH}/newscoop-$UPSTREAMVERSION.tar.gz"
   tar xzf ${MIRRORPATH}/newscoop-$UPSTREAMVERSION.tar.gz
+
 elif [ -f ${MIRRORPATH}/newscoop-$UPSTREAMDIST$SFOCUSTOM.tar.gz ]; then
 	echo "using local file ${MIRRORPATH}/newscoop-$UPSTREAMDIST$SFOCUSTOM.tar.gz"
   tar xzf ${MIRRORPATH}/newscoop-$UPSTREAMDIST$SFOCUSTOM.tar.gz
+
 elif [ -n "$CUSTOMURL" ]; then
-	echo "download ${CUSTOMURL}"
+	echo "...from ${CUSTOMURL}"
 	curl -L ${CUSTOMURL} \
 		| tee ${MIRRORPATH}/newscoop-$UPSTREAMDIST.tar.gz \
 		| tar xzf - || exit
 else
-	echo "download from sourceforge."
-  #curl -L http://downloads.sourceforge.net/project/newscoop/$UPSTREAMDIST/newscoop-$UPSTREAMVERSION.tar.gz | tar xzf -
-  curl -L http://downloads.sourceforge.net/project/newscoop/$UPSTREAMVERSION/newscoop-$UPSTREAMVERSION.tar.gz \
-		| tee ${MIRRORPATH}/newscoop-$UPSTREAMDIST$SFOCUSTOM.tar.gz \
+	echo "...from GitHub"
+
+  curl -L https://github.com/sourcefabric/Newscoop/releases/download/$UPSTREAMVERSION/newscoop-$UPSTREAMVERSION.tar.gz \
+		| tee ${MIRRORPATH}/newscoop-$UPSTREAMVERSION.tar.gz \
 		| tar xzf - || exit
 fi
 
@@ -92,13 +94,11 @@ for file in ChangeLog; do
   mv -vi newscoop/${file}.txt newscoop/${file}
 done
 mv newscoop/ChangeLog newscoop/changelog
-#cp -vi newscoop/htaccess newscoop/.htaccess
+cp -vi newscoop/htaccess.dist newscoop/.htaccess
 
 # remove sample data now in separate package
-#rm -r newscoop/install/sample_data/files/
-#rm -r newscoop/install/sample_data/images/
+rm -r newscoop/install/Resources/sample_data
 rm newscoop/install/Resources/sql/campsite_demo_data.sql
-rm newscoop/install/Resources/sql/campsite_demo_prepare.sql
 rm newscoop/install/Resources/sql/campsite_demo_tables.sql
 
 # remove geonames.org data now in separate package
@@ -108,7 +108,7 @@ rm newscoop/install/Resources/sql/CityNames.csv
 ### fixes for 4.3.0 ###
 if test "${UPSTREAMVERSION}" == "4.3.0"; then
 
-sed -i "1s:sh:bash:" newscoop/vendor/swiftmailer/swiftmailer/test-suite/lib/simpletest/packages/build_tarball.sh
+#sed -i "1s:sh:bash:" newscoop/vendor/swiftmailer/swiftmailer/test-suite/lib/simpletest/packages/build_tarball.sh
 
 rm -rf newscoop/vendor/behat/behat/.git/
 rm -rf newscoop/vendor/behat/common-contexts/.git/
@@ -160,11 +160,8 @@ rm newscoop/vendor/friendsofsymfony/rest-bundle/FOS/RestBundle/.gitignore
 rm newscoop/vendor/friendsofsymfony/rest/FOS/Rest/.gitignore
 rm newscoop/vendor/guzzle/guzzle/.gitignore
 rm newscoop/vendor/jdorn/sql-formatter/.gitignore
-rm newscoop/vendor/jms/cg/.gitignore
-rm newscoop/vendor/jms/di-extra-bundle/JMS/DiExtraBundle/.gitignore
 rm newscoop/vendor/jms/metadata/.gitignore
 rm newscoop/vendor/jms/parser-lib/.gitignore
-rm newscoop/vendor/jms/security-extra-bundle/JMS/SecurityExtraBundle/.gitignore
 rm newscoop/vendor/jms/serializer-bundle/JMS/SerializerBundle/.gitignore
 rm newscoop/vendor/jms/serializer/.gitignore
 rm newscoop/vendor/knplabs/knp-components/.gitignore
@@ -178,13 +175,15 @@ rm newscoop/vendor/sensio/distribution-bundle/Sensio/Bundle/DistributionBundle/.
 rm newscoop/vendor/sensio/framework-extra-bundle/Sensio/Bundle/FrameworkExtraBundle/.gitignore
 rm newscoop/vendor/sensio/generator-bundle/Sensio/Bundle/GeneratorBundle/.gitignore
 rm newscoop/vendor/swiftmailer/swiftmailer/.gitignore
+rm newscoop/vendor/symfony/assetic-bundle/Symfony/Bundle/AsseticBundle/.gitignore
 rm newscoop/vendor/symfony/monolog-bundle/Symfony/Bundle/MonologBundle/.gitignore
-rm newscoop/vendor/symfony/swiftmailer-bundle/Symfony/Bundle/SwiftmailerBundle/.gitignore
 rm newscoop/vendor/symfony/symfony/.gitignore
 rm newscoop/vendor/symfony/symfony/src/Symfony/Bridge/Doctrine/.gitignore
 rm newscoop/vendor/symfony/symfony/src/Symfony/Bridge/Monolog/.gitignore
 rm newscoop/vendor/symfony/symfony/src/Symfony/Bridge/Propel1/.gitignore
 rm newscoop/vendor/symfony/symfony/src/Symfony/Bridge/Twig/.gitignore
+rm newscoop/vendor/symfony/symfony/src/Symfony/Bundle/SecurityBundle/.gitignore
+rm newscoop/vendor/symfony/symfony/src/Symfony/Bundle/TwigBundle/.gitignore
 rm newscoop/vendor/symfony/symfony/src/Symfony/Bundle/WebProfilerBundle/.gitignore
 rm newscoop/vendor/symfony/symfony/src/Symfony/Component/BrowserKit/.gitignore
 rm newscoop/vendor/symfony/symfony/src/Symfony/Component/ClassLoader/.gitignore
@@ -214,6 +213,60 @@ rm newscoop/vendor/symfony/symfony/src/Symfony/Component/Yaml/.gitignore
 rm newscoop/vendor/twig/twig/.gitignore
 rm newscoop/vendor/twig/twig/ext/twig/.gitignore
 
+rm newscoop/vendor/dflydev/doctrine-orm-service-provider/.gitignore
+rm newscoop/vendor/doctrine/cache/.gitignore
+rm newscoop/vendor/doctrine/collections/.gitignore
+rm newscoop/vendor/doctrine/inflector/.gitignore
+rm newscoop/vendor/doctrine/instantiator/.gitignore
+rm newscoop/vendor/friendsofsymfony/jsrouting-bundle/FOS/JsRoutingBundle/.gitignore
+rm newscoop/vendor/friendsofsymfony/oauth-server-bundle/FOS/OAuthServerBundle/.gitignore
+rm newscoop/vendor/friendsofsymfony/oauth2-php/.gitignore
+rm newscoop/vendor/hellogerard/jobby/.gitignore
+rm newscoop/vendor/imagine/imagine/.gitignore
+rm newscoop/vendor/imagine/imagine/docs/_themes/.gitignore
+rm newscoop/vendor/incenteev/composer-parameter-handler/Incenteev/ParameterHandler/.gitignore
+rm newscoop/vendor/jeremeamia/SuperClosure/.gitignore
+rm newscoop/vendor/knplabs/knp-menu-bundle/Knp/Bundle/MenuBundle/.gitignore
+rm newscoop/vendor/knplabs/knp-menu/.gitignore
+rm newscoop/vendor/knplabs/packagist-api/.gitignore
+rm newscoop/vendor/mtdowling/cron-expression/.gitignore
+rm newscoop/vendor/nelmio/api-doc-bundle/Nelmio/ApiDocBundle/.gitignore
+rm newscoop/vendor/phpdocumentor/reflection-docblock/.gitignore
+rm newscoop/vendor/phpspec/prophecy-phpunit/Prophecy/PhpUnit/.gitignore
+rm newscoop/vendor/phpspec/prophecy/.gitignore
+rm newscoop/vendor/phpunit/php-code-coverage/.gitignore
+rm newscoop/vendor/phpunit/php-file-iterator/.gitignore
+rm newscoop/vendor/phpunit/php-text-template/.gitignore
+rm newscoop/vendor/phpunit/php-timer/.gitignore
+rm newscoop/vendor/phpunit/php-token-stream/.gitignore
+rm newscoop/vendor/phpunit/phpunit-mock-objects/.gitignore
+rm newscoop/vendor/phpunit/phpunit/.gitignore
+rm newscoop/vendor/pimple/pimple/.gitignore
+rm newscoop/vendor/raulfraile/ladybug-bundle/RaulFraile/Bundle/LadybugBundle/.gitignore
+rm newscoop/vendor/raulfraile/ladybug/.gitignore
+rm newscoop/vendor/raven/raven/.gitignore
+rm newscoop/vendor/sebastian/comparator/.gitignore
+rm newscoop/vendor/sebastian/diff/.gitignore
+rm newscoop/vendor/sebastian/environment/.gitignore
+rm newscoop/vendor/sebastian/exporter/.gitignore
+rm newscoop/vendor/sebastian/global-state/.gitignore
+rm newscoop/vendor/sebastian/version/.gitignore
+rm newscoop/vendor/silex/silex/.gitignore
+rm newscoop/vendor/smarty/smarty-dev/.gitignore
+rm newscoop/vendor/smarty/smarty-dev/documentation/entities/.cvsignore
+rm newscoop/vendor/smarty/smarty/.gitignore
+rm newscoop/vendor/symfony/swiftmailer-bundle/.gitignore
+rm newscoop/vendor/symfony/symfony/src/Symfony/Bridge/ProxyManager/.gitignore
+rm newscoop/vendor/symfony/symfony/src/Symfony/Bridge/Swiftmailer/.gitignore
+rm newscoop/vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/.gitignore
+rm newscoop/vendor/symfony/symfony/src/Symfony/Component/Debug/.gitignore
+rm newscoop/vendor/symfony/symfony/src/Symfony/Component/Intl/.gitignore
+rm newscoop/vendor/twig/extensions/.gitignore
+rm newscoop/vendor/willdurand/js-translation-bundle/Bazinga/ExposeTranslationBundle/.gitignore
+rm newscoop/vendor/willdurand/jsonp-callback-validator/.gitignore
+rm newscoop/vendor/willdurand/negotiation/.gitignore
+rm newscoop/vendor/yzalis/crontab/.gitignore
+
 rm newscoop/vendor/symfony/symfony/src/Symfony/Component/Console/Resources/bin/hiddeninput.exe
 
 chmod +x newscoop/bin/post-install.sh
@@ -221,8 +274,20 @@ chmod +x newscoop/vendor/doctrine/dbal/bin/doctrine-dbal
 chmod +x newscoop/vendor/knplabs/knp-components/bin/vendors.php
 chmod +x newscoop/vendor/doctrine/orm/bin/doctrine
 
-chmod -x newscoop/plugins/debate/template_engine/classes/DebateIssue.php
-chmod -x newscoop/application/console
+chmod +x newscoop/application/console
+chmod +x newscoop/bin/events-notifier
+chmod +x newscoop/bin/newscoop-autopublish
+chmod +x newscoop/bin/newscoop-indexer
+chmod +x newscoop/bin/newscoop-statistics
+chmod +x newscoop/bin/newscoop-stats
+chmod +x newscoop/bin/subscription-notifier
+chmod +x newscoop/scripts/fixer.php
+chmod +x newscoop/vendor/raulfraile/ladybug/bin/deploy.php
+chmod +x newscoop/vendor/smarty/smarty-dev/development/PHPunit/_phpunit-tests-coverage.sh
+chmod +x newscoop/vendor/smarty/smarty-dev/development/PHPunit/_phpunit-tests-single.sh
+chmod +x newscoop/vendor/smarty/smarty-dev/development/PHPunit/_phpunit-tests.sh
+chmod +x newscoop/vendor/swiftmailer/swiftmailer/tests/_samples/smime/create-cert.sh
+
 chmod -x newscoop/vendor/behat/behat/src/Behat/Behat/Util/data/x7e.php
 chmod -x newscoop/admin-files/media-archive/multiedit_file.php
 chmod -x newscoop/vendor/behat/behat/src/Behat/Behat/Util/data/x97.php
@@ -747,7 +812,6 @@ chmod -x newscoop/vendor/jms/security-extra-bundle/JMS/SecurityExtraBundle/Resou
 chmod -x newscoop/admin-files/lang/pl/plugins.php
 chmod -x newscoop/admin-files/localizer/Localizer.php
 chmod -x newscoop/vendor/behat/behat/src/Behat/Behat/Util/data/x9b.php
-chmod -x newscoop/plugins/debate/template_engine/classes/DebateIssue.php
 chmod -x newscoop/application/console
 chmod -x newscoop/vendor/behat/behat/src/Behat/Behat/Util/data/x7e.php
 chmod -x newscoop/admin-files/media-archive/multiedit_file.php
@@ -1275,6 +1339,85 @@ chmod -x newscoop/admin-files/localizer/Localizer.php
 chmod -x newscoop/vendor/behat/behat/src/Behat/Behat/Util/data/x9b.php
 chmod -x newscoop/install/sql/upgrade/3.5.x/tables.sql
 chmod -x newscoop/install/sql/upgrade/4.2.x/2014.04.24/data-required.sql
+
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/fr/bookinfo.xml
+chmod -x newscoop/library/Newscoop/Services/ArticleService.php
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/entities/ISO/ISOamsr
+chmod -x newscoop/library/Newscoop/Entity/Language.php
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/entities/ISO/ISOcyr2
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/entities/ISO/ISObox
+chmod -x newscoop/template_engine/metaclasses/MetaArticle.php
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/entities/ISO/ISOpub
+chmod -x newscoop/application/modules/admin/controllers/SubscriptionController.php
+chmod -x newscoop/library/Newscoop/Tools/Console/Command/ClearOldStatisticsCommand.php
+chmod -x newscoop/library/Newscoop/Tools/Console/Command/SubscriptionsNotifierCommand.php
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/es/make_chm_index.html
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/de/bookinfo.xml
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/ru/bookinfo.xml
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/es/designers/language-basic-syntax/language-syntax-variables.xml
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/entities/ISO/ISOgrk3
+chmod -x newscoop/library/Newscoop/Tools/Console/Command/EventsNotifierCommand.php
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/entities/ISO/ISOamsa
+chmod -x newscoop/vendor/dflydev/doctrine-orm-service-provider/src/Dflydev/Pimple/Provider/DoctrineOrm/DoctrineOrmServiceProvider.php
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/es/bookinfo.xml
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/en/make_chm_index.html
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/pt_BR/bookinfo.xml
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/en/bookinfo.xml
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/entities/ISO/ISOlat2
+chmod -x newscoop/vendor/hybridauth/hybridauth/additional-providers/hybridauth-github/Providers/GitHub.php
+chmod -x newscoop/library/Newscoop/Entity/ArticleAuthor.php
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/entities/ISO/ISOamsc
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/entities/ISO/ISOnum
+chmod -x newscoop/library/Newscoop/Entity/AutoId.php
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/entities/ISO/ISOamsn
+chmod -x newscoop/library/Newscoop/Entity/Log.php
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/entities/ISO/ISOlat1
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/pt_BR/livedocs.ent
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/entities/.cvsignore
+chmod -x newscoop/library/Newscoop/Entity/Publication.php
+chmod -x newscoop/cache/.htaccess
+chmod -x newscoop/library/Newscoop/Tools/Console/Command/AutopublishCommand.php
+chmod -x newscoop/js/tinymce/plugins/campsiteinternallink/img/newscoopinternallink.gif
+chmod -x newscoop/library/Newscoop/Entity/User.php
+chmod -x newscoop/library/Newscoop/Tools/Console/Command/LogMaintenanceCommand.php
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/entities/ISO/ISOgrk1
+chmod -x newscoop/vendor/nelmio/api-doc-bundle/Nelmio/ApiDocBundle/Resources/views/layout.html.twig
+chmod -x newscoop/vendor/doctrine/dbal/lib/Doctrine/DBAL/Types/JsonArrayType.php
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/entities/ISO/ISOamso
+chmod -x newscoop/library/Newscoop/Tools/Console/Command/UpdateImageStorageCommand.php
+chmod -x newscoop/library/Newscoop/Entity/Section.php
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/entities/ISO/ISOgrk2
+chmod -x newscoop/library/Newscoop/Entity/AuditEvent.php
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/entities/ISO/ISOdia
+chmod -x newscoop/library/Newscoop/Entity/Request.php
+chmod -x newscoop/library/Newscoop/TemplateList/SlideshowsList.php
+chmod -x newscoop/vendor/knplabs/knp-components/src/Knp/Component/Pager/Paginator.php
+chmod -x newscoop/vendor/knplabs/knp-paginator-bundle/Knp/Bundle/PaginatorBundle/Subscriber/SlidingPaginationSubscriber.php
+chmod -x newscoop/library/Newscoop/TemplateList/UsersList.php
+chmod -x newscoop/constants.php
+chmod -x newscoop/bin/cli_script_lib.php
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/pt_BR/make_chm_index.html
+chmod -x newscoop/vendor/recaptcha/php5/Package/Captcha/Exception.php
+chmod -x newscoop/template_engine/classes/ArticleImagesList.php
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/entities/ISO/ISOgrk4
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/entities/ISO/ISOcyr1
+chmod -x newscoop/library/Newscoop/Tools/Console/Command/IndexerCommand.php
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/es/livedocs.ent
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/entities/ISO/ISOtech
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/scripts/revcheck.php
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/entities/ISO/ISOamsb
+chmod -x newscoop/vendor/imagine/imagine/tests/Imagine/Fixtures/resize/210-design-19933.jpg
+chmod -x newscoop/classes/ArticleData.php
+chmod -x newscoop/vendor/smarty/smarty-dev/documentation/entities/ISO/catalog
+chmod -x newscoop/library/Newscoop/Entity/Session.php
+chmod -x newscoop/vendor/phpunit/phpunit/src/Util/Blacklist.php
+chmod -x newscoop/vendor/doctrine/instantiator/.travis.install.sh
+chmod -x newscoop/library/Newscoop/Services/FilesystemService.php
+chmod -x newscoop/admin-files/articles/post.php
+chmod -x newscoop/conf/saas_config_sample.php
+chmod -x newscoop/library/Newscoop/Entity/Event.php
+chmod -x newscoop/library/Newscoop/Tools/Console/Command/SendStatsCommand.php
+chmod -x newscoop/vendor/doctrine/dbal/lib/Doctrine/DBAL/Types/SimpleArrayType.php
 
 fi
 

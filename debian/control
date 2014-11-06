@@ -10,7 +10,6 @@ Package: newscoop
 Architecture: all
 Depends: apache2,
  curl,
- debconf,
  imagemagick,
  libapache2-mod-php5,
  mysql-client,

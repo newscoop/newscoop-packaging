@@ -1,2 +1,6 @@
 newscoop/changelog
-newscoop/UPGRADE.md
+newscoop/DETAILED-CHANGELOG.txt
+newscoop/docs/INSTALL-ubuntu.md
+newscoop/docs/README.md
+newscoop/docs/UPGRADE_4_3.md
+newscoop/docs/UPGRADE_BELOW_4_2_3.md
