@@ -266,6 +266,7 @@ rm newscoop/vendor/willdurand/jsonp-callback-validator/.gitignore
 rm newscoop/vendor/willdurand/negotiation/.gitignore
 rm newscoop/vendor/yzalis/crontab/.gitignore
 
+rm newscoop/vendor/smarty/smarty-dev/documentation/entities/.cvsignore
 rm newscoop/vendor/symfony/symfony/src/Symfony/Component/Console/Resources/bin/hiddeninput.exe
 
 chmod +x newscoop/bin/post-install.sh
@@ -655,7 +656,6 @@ chmod -x newscoop/admin-files/pub/index.php
 chmod -x newscoop/vendor/bombayworks/zendframework1/library/Zend/Gdata/Health.php
 chmod -x newscoop/vendor/behat/behat/src/Behat/Behat/Util/data/xc6.php
 chmod -x newscoop/vendor/behat/behat/src/Behat/Behat/Util/data/x9b.php
-chmod -x newscoop/application/console
 chmod -x newscoop/vendor/behat/behat/src/Behat/Behat/Util/data/x7e.php
 chmod -x newscoop/admin-files/media-archive/multiedit_file.php
 chmod -x newscoop/vendor/behat/behat/src/Behat/Behat/Util/data/x97.php
