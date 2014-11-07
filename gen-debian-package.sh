@@ -57,9 +57,6 @@ else
 		| tar xzf - || exit
 fi
 
-# done in README.Debian
-#rm newscoop/INSTALL.txt
-
 # Sourcefabric licenses covered by debian/copyright
 rm newscoop/COPYING.txt
 rm newscoop/LICENSE_3RD_PARTY.txt
@@ -97,7 +94,8 @@ mv newscoop/ChangeLog newscoop/changelog
 cp -vi newscoop/htaccess.dist newscoop/.htaccess
 
 # remove sample data now in separate package
-rm -r newscoop/install/Resources/sample_data/*
+rm -r newscoop/install/Resources/sample_data/files/
+rm -r newscoop/install/Resources/sample_data/images/
 rm newscoop/install/Resources/sql/campsite_demo_data.sql
 rm newscoop/install/Resources/sql/campsite_demo_tables.sql
 
@@ -107,8 +105,6 @@ rm newscoop/install/Resources/sql/CityNames.csv
 
 ### fixes for 4.3.0 ###
 if test "${UPSTREAMVERSION}" == "4.3.0"; then
-
-#sed -i "1s:sh:bash:" newscoop/vendor/swiftmailer/swiftmailer/test-suite/lib/simpletest/packages/build_tarball.sh
 
 rm -rf newscoop/vendor/behat/behat/.git/
 rm -rf newscoop/vendor/behat/common-contexts/.git/
