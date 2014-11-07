@@ -152,9 +152,6 @@ case "$1" in
     dpkg-statoverride --list $datadir/images/thumbnails &>/dev/null || \
     dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0755 $datadir/images/thumbnails
 
-    dpkg-statoverride --list $datadir/install/cron_jobs &>/dev/null || \
-    dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0750 $datadir/install/cron_jobs
-
     dpkg-statoverride --list $datadir/library/Proxy &>/dev/null || \
     dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0750 $datadir/library/Proxy
 
