@@ -97,7 +97,7 @@ mv newscoop/ChangeLog newscoop/changelog
 cp -vi newscoop/htaccess.dist newscoop/.htaccess
 
 # remove sample data now in separate package
-rm -r newscoop/install/Resources/sample_data
+rm -r newscoop/install/Resources/sample_data/*
 rm newscoop/install/Resources/sql/campsite_demo_data.sql
 rm newscoop/install/Resources/sql/campsite_demo_tables.sql
 
