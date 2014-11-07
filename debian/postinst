@@ -86,15 +86,16 @@ case "$1" in
         install -d -m755 /etc/$webserver/sites-available/
       fi
 
-      sed -e "s/__SERVER_ADMIN__/${SA}/;s/__SERVER_NAME__/${SN}/" \
-        ${a2tplfile} > /etc/$webserver/sites-available/newscoop-vhost.conf
+      sed -i "s/__SERVER_ADMIN__/${SA}/" ${a2tplfile}
+      sed -i "s/__SERVER_NAME__/${SN}/" ${a2tplfile}
+      cp ${a2tplfile} /etc/$webserver/sites-available/newscoop-vhost.conf
       a2ensite newscoop-vhost.conf
       a2enmod rewrite
       restart="$webserver $restart"
       dohtaccess="/"
     fi
 
-    # PHP config
+    echo "Beginning PHP configuration..."
     sed -i "s/__TIME_ZONE__/${TIMEZONE}/" ${phpinifile}
 
     if [ ! -d /etc/$php/conf.d/ ]; then
@@ -106,7 +107,7 @@ case "$1" in
       restart="$webserver $restart"
     fi
 
-    # .htaccess file
+    echo "Setting up .htaccess file..."
     echo -ne "/RewriteBase/d\nwq\n\n" \
     | ed /var/lib/newscoop/.htaccess &>/dev/null || true
 
@@ -132,7 +133,7 @@ case "$1" in
 #     fi
 #   fi
 
-    # Permissions
+    echo "Setting permissions..."
     dpkg-statoverride --list $datadir &>/dev/null || \
     dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0755 $datadir
 
@@ -183,13 +184,6 @@ case "$1" in
 
     # Installer needs to own all theme files, not just the themes directory
     chown -R $WEB_USER.$WEB_GROUP $datadir/themes/ || true
-
-    # Localizer needs to be able to write to translation files
-    chown -R $WEB_USER.$WEB_GROUP $datadir/admin-files/lang
-    chown -R $WEB_USER.$WEB_GROUP $datadir/plugins/debate/admin-files/lang
-    chown -R $WEB_USER.$WEB_GROUP $datadir/plugins/poll/admin-files/lang
-    chown -R $WEB_USER.$WEB_GROUP $datadir/plugins/recaptcha/admin-files/lang
-    chown -R $WEB_USER.$WEB_GROUP $datadir/plugins/soundcloud/admin-files/lang
 
 # newscoop-3.5 does not yet support that
 #   # database setup
