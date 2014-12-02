@@ -262,6 +262,21 @@ rm newscoop/vendor/willdurand/jsonp-callback-validator/.gitignore
 rm newscoop/vendor/willdurand/negotiation/.gitignore
 rm newscoop/vendor/yzalis/crontab/.gitignore
 
+rm newscoop/application/configs/subscriptions/.gitignore
+rm newscoop/cache/.gitignore
+rm newscoop/images/.gitignore
+rm newscoop/images/thumbnails/.gitignore
+
+rm newscoop/library/Proxy/.gitignore
+rm newscoop/log/.gitignore
+rm newscoop/plugins/.gitignore
+rm newscoop/plugins/cache/.gitignore
+rm newscoop/plugins/private_plugins/.gitignore
+rm newscoop/public/bundles/.gitignore
+rm newscoop/public/files/.gitignore
+rm newscoop/public/pdf/.gitignore
+rm newscoop/tests/report/.gitignore
+
 rm newscoop/vendor/smarty/smarty-dev/documentation/entities/.cvsignore
 rm newscoop/vendor/symfony/symfony/src/Symfony/Component/Console/Resources/bin/hiddeninput.exe
 
