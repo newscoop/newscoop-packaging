@@ -22,9 +22,14 @@ echo -n "OK? [enter|CTRL-C]" ; read
 cp -r ./rpm /tmp/newscoop-${VERSION}/
 cd ${TMP}/
 
-# workarounds for Newscoop 4.2.3 spaces in filenames, symbolic links etc.
-mv newscoop-${VERSION}/newscoop/vendor/symfony/symfony/src/Symfony/Component/Finder/Tests/Fixtures/with\ space/ newscoop-${VERSION}/newscoop/vendor/symfony/symfony/src/Symfony/Component/Finder/Tests/Fixtures/with_space/
+# workarounds for Newscoop 4.3.1 spaces in filenames, symbolic links etc.
+mv newscoop-${VERSION}/newscoop/vendor/symfony/symfony/src/Symfony/Component/Finder/Tests/Fixtures/with\ space/ newscoop-${VERSION}/newscoop/vendor/symfony/symfony/src/Symfony/Component/Finder/Tests/Fixtures/withspace/
 
+mv newscoop-${VERSION}/newscoop/vendor/symfony/symfony/src/Symfony/Component/Finder/Tests/Fixtures/r+e.gex\[c\]a\(r\)s/ newscoop-${VERSION}/newscoop/vendor/symfony/symfony/src/Symfony/Component/Finder/Tests/Fixtures/regexcars/
+
+mv newscoop-${VERSION}/newscoop/vendor/smarty/smarty-dev/development/Smarty3Doc/Smarty/Compiler/_libs---sysplugins---smarty_internal_compile_block\ -\ new.php.html newscoop-${VERSION}/newscoop/vendor/smarty/smarty-dev/development/Smarty3Doc/Smarty/Compiler/_libs---sysplugins---smarty_internal_compile_block-new.php.html
+
+mv newscoop-${VERSION}/newscoop/vendor/smarty/smarty-dev/development/lexer/Lempar\ Original.php newscoop-${VERSION}/newscoop/vendor/smarty/smarty-dev/development/lexer/LemparOriginal.php
 # end workarounds
 
 tar czf /tmp/rpm_newscoop-${VERSION}.tar.gz newscoop-${VERSION}/
