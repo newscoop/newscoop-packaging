@@ -1,2 +1,5 @@
 # newscoop/install/templates/license.tpl is not a duplicate license text
 newscoop binary: extra-license-file var/lib/newscoop/install/templates/license.tpl
+
+# this copy of the GNU GPL v3 license is shown to users by the installation wizard
+newscoop binary: extra-license-file var/lib/newscoop/install/Resources/views/license.twig 

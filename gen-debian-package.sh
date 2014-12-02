@@ -103,8 +103,8 @@ rm newscoop/install/Resources/sql/campsite_demo_tables.sql
 rm newscoop/install/Resources/sql/CityLocations.csv
 rm newscoop/install/Resources/sql/CityNames.csv
 
-### fixes for 4.3.0 ###
-if test "${UPSTREAMVERSION}" == "4.3.0"; then
+### fixes for 4.3.1 ###
+if test "${UPSTREAMVERSION}" == "4.3.1"; then
 
 rm -rf newscoop/vendor/behat/behat/.git/
 rm -rf newscoop/vendor/behat/common-contexts/.git/
