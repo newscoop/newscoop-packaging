@@ -243,6 +243,13 @@ case "$1" in
        ln -s /usr/share/geonames-city-data/CityNames.csv /var/lib/newscoop/install/Resources/sql/CityNames.csv
     fi
 
+    # workaround for CS-5577
+
+    if [ -d /var/lib/newscoop/cache/ ]; then
+    echo "Removing old files from cache..."
+       rm -r /var/lib/newscoop/cache/*
+    fi
+
     servers="apache2"
     . /usr/share/wwwconfig-common/restart.sh
     echo $error >&2
