@@ -158,9 +158,6 @@ case "$1" in
     dpkg-statoverride --list $datadir/log &>/dev/null || \
     dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0750 $datadir/log
 
-    dpkg-statoverride --list $datadir/plugins &>/dev/null || \
-    dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0750 $datadir/plugins
-
     dpkg-statoverride --list $datadir/public &>/dev/null || \
     dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0755 $datadir/public
 
@@ -182,8 +179,14 @@ case "$1" in
     dpkg-statoverride --list $datadir/.htaccess &>/dev/null || \
     dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0644 $datadir/.htaccess
 
-    # Installer needs to own all theme files, not just the themes directory
+    # Newscoop needs to own all files under these directories
+    chown -R $WEB_USER.$WEB_GROUP $datadir/application/ || true
+    chown -R $WEB_USER.$WEB_GROUP $datadir/plugins/ || true
     chown -R $WEB_USER.$WEB_GROUP $datadir/themes/ || true
+    chown -R $WEB_USER.$WEB_GROUP $datadir/vendor/ || true
+
+    # Needed for plugin installation
+    chown $WEB_USER.$WEB_GROUP $datadir/composer.*
 
 # newscoop-3.5 does not yet support that
 #   # database setup
