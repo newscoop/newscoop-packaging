@@ -21,12 +21,13 @@ WEB_GROUP=www-data
 
 package_name="newscoop"
 datadir="/var/lib/${package_name}"
-configdir="/etc/newscoop/4.2"
+configdir="/etc/newscoop/4.3"
 includefile="${configdir}/apache.conf"
 a2tplfile="${configdir}/apache.vhost.tpl"
 crontplfile="${configdir}/newscoop.cron.tpl"
 cronincfile="${configdir}/newscoop.cron"
 phpinifile="${configdir}/newscoop.ini"
+TIMEZONE="$(cat /etc/timezone)"
 OLDVERSION="$2"
 
 case "$1" in
@@ -85,24 +86,28 @@ case "$1" in
         install -d -m755 /etc/$webserver/sites-available/
       fi
 
-      sed -e "s/__SERVER_ADMIN__/${SA}/;s/__SERVER_NAME__/${SN}/" \
-        ${a2tplfile} > /etc/$webserver/sites-available/newscoop-vhost.conf
+      sed -i "s/__SERVER_ADMIN__/${SA}/" ${a2tplfile}
+      sed -i "s/__SERVER_NAME__/${SN}/" ${a2tplfile}
+      cp ${a2tplfile} /etc/$webserver/sites-available/newscoop-vhost.conf
       a2ensite newscoop-vhost.conf
       a2enmod rewrite
       restart="$webserver $restart"
       dohtaccess="/"
     fi
 
-    # PHP config
+    echo "Beginning PHP configuration..."
+    sed -i "s:__TIME_ZONE__:${TIMEZONE}:" ${phpinifile}
+
     if [ ! -d /etc/$php/conf.d/ ]; then
       install -d -m755 /etc/$php/conf.d/
     fi
+
     if [ ! -e /etc/$php/conf.d/newscoop.ini ]; then
       ln -s ${phpinifile} /etc/$php/conf.d/newscoop.ini
       restart="$webserver $restart"
     fi
 
-    # .htaccess file
+    echo "Setting up .htaccess file..."
     echo -ne "/RewriteBase/d\nwq\n\n" \
     | ed /var/lib/newscoop/.htaccess &>/dev/null || true
 
@@ -128,7 +133,7 @@ case "$1" in
 #     fi
 #   fi
 
-    # Permissions
+    echo "Setting permissions..."
     dpkg-statoverride --list $datadir &>/dev/null || \
     dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0755 $datadir
 
@@ -147,17 +152,14 @@ case "$1" in
     dpkg-statoverride --list $datadir/images/thumbnails &>/dev/null || \
     dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0755 $datadir/images/thumbnails
 
-    dpkg-statoverride --list $datadir/install/cron_jobs &>/dev/null || \
-    dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0750 $datadir/install/cron_jobs
-
     dpkg-statoverride --list $datadir/library/Proxy &>/dev/null || \
     dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0750 $datadir/library/Proxy
 
     dpkg-statoverride --list $datadir/log &>/dev/null || \
     dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0750 $datadir/log
 
-    dpkg-statoverride --list $datadir/plugins &>/dev/null || \
-    dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0750 $datadir/plugins
+    dpkg-statoverride --list $datadir/public &>/dev/null || \
+    dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0755 $datadir/public
 
     dpkg-statoverride --list $datadir/public/bundles &>/dev/null || \
     dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0755 $datadir/public/bundles
@@ -177,15 +179,14 @@ case "$1" in
     dpkg-statoverride --list $datadir/.htaccess &>/dev/null || \
     dpkg-statoverride --add --force --update $WEB_USER $WEB_GROUP 0644 $datadir/.htaccess
 
-    # Installer needs to own all theme files, not just the themes directory
+    # Newscoop needs to own all files under these directories
+    chown -R $WEB_USER.$WEB_GROUP $datadir/application/ || true
+    chown -R $WEB_USER.$WEB_GROUP $datadir/plugins/ || true
     chown -R $WEB_USER.$WEB_GROUP $datadir/themes/ || true
+    chown -R $WEB_USER.$WEB_GROUP $datadir/vendor/ || true
 
-    # Localizer needs to be able to write to translation files
-    chown -R $WEB_USER.$WEB_GROUP $datadir/admin-files/lang
-    chown -R $WEB_USER.$WEB_GROUP $datadir/plugins/debate/admin-files/lang
-    chown -R $WEB_USER.$WEB_GROUP $datadir/plugins/poll/admin-files/lang
-    chown -R $WEB_USER.$WEB_GROUP $datadir/plugins/recaptcha/admin-files/lang
-    chown -R $WEB_USER.$WEB_GROUP $datadir/plugins/soundcloud/admin-files/lang
+    # Needed for plugin installation
+    chown $WEB_USER.$WEB_GROUP $datadir/composer.*
 
 # newscoop-3.5 does not yet support that
 #   # database setup
@@ -203,36 +204,53 @@ case "$1" in
 #       # TODO: save db-account to newscoop-config.
 #   fi
 
-    # symlinks for sample data package
+    echo "Creating symlinks for sample data package..."
 
-    if [ ! -h /var/lib/newscoop/install/sample_data/files ] && [ -d /usr/share/newscoop-sample-data/files/ ]; then
-       ln -s /usr/share/newscoop-sample-data/files/ /var/lib/newscoop/install/sample_data/files
+    if [ ! -d /var/lib/newscoop/install/Resources/sample_data/ ]; then
+       mkdir -p /var/lib/newscoop/install/Resources/sample_data/
     fi
 
-    if [ ! -h /var/lib/newscoop/install/sample_data/images ] && [ -d /usr/share/newscoop-sample-data/images/ ]; then
-       ln -s /usr/share/newscoop-sample-data/images/ /var/lib/newscoop/install/sample_data/images
+    if [ ! -h /var/lib/newscoop/install/Resources/sample_data/files ] && [ -d /usr/share/newscoop-sample-data/files/ ]; then
+       ln -s /usr/share/newscoop-sample-data/files/ /var/lib/newscoop/install/Resources/sample_data/files
     fi
 
-    if [ ! -h /var/lib/newscoop/install/sql/campsite_demo_data.sql ] && [ -e /usr/share/newscoop-sample-data/sql/campsite_demo_data.sql ]; then
-       ln -s /usr/share/newscoop-sample-data/sql/campsite_demo_data.sql /var/lib/newscoop/install/sql/campsite_demo_data.sql
+    if [ ! -h /var/lib/newscoop/install/Resources/sample_data/images ] && [ -d /usr/share/newscoop-sample-data/images/ ]; then
+       ln -s /usr/share/newscoop-sample-data/images/ /var/lib/newscoop/install/Resources/sample_data/images
     fi
 
-    if [ ! -h /var/lib/newscoop/install/sql/campsite_demo_prepare.sql ] && [ -e /usr/share/newscoop-sample-data/sql/campsite_demo_prepare.sql ]; then
-       ln -s /usr/share/newscoop-sample-data/sql/campsite_demo_prepare.sql /var/lib/newscoop/install/sql/campsite_demo_prepare.sql
+    # symlinks for demo SQL files
+
+    if [ ! -d /var/lib/newscoop/install/Resources/sql/ ]; then
+       mkdir -p /var/lib/newscoop/install/Resources/sql/
     fi
 
-    if [ ! -h /var/lib/newscoop/install/sql/campsite_demo_tables.sql ] && [ -e /usr/share/newscoop-sample-data/sql/campsite_demo_tables.sql ]; then
-       ln -s /usr/share/newscoop-sample-data/sql/campsite_demo_tables.sql /var/lib/newscoop/install/sql/campsite_demo_tables.sql
+    if [ ! -h /var/lib/newscoop/install/Resources/sql/campsite_demo_data.sql ] && [ -e /usr/share/newscoop-sample-data/sql/campsite_demo_data.sql ]; then
+       ln -s /usr/share/newscoop-sample-data/sql/campsite_demo_data.sql /var/lib/newscoop/install/Resources/sql/campsite_demo_data.sql
+    fi
+
+    if [ ! -h /var/lib/newscoop/install/Resources/sql/campsite_demo_prepare.sql ] && [ -e /usr/share/newscoop-sample-data/sql/campsite_demo_prepare.sql ]; then
+       ln -s /usr/share/newscoop-sample-data/sql/campsite_demo_prepare.sql /var/lib/newscoop/install/Resources/sql/campsite_demo_prepare.sql
+    fi
+
+    if [ ! -h /var/lib/newscoop/install/Resources/sql/campsite_demo_tables.sql ] && [ -e /usr/share/newscoop-sample-data/sql/campsite_demo_tables.sql ]; then
+       ln -s /usr/share/newscoop-sample-data/sql/campsite_demo_tables.sql /var/lib/newscoop/install/Resources/sql/campsite_demo_tables.sql
     fi
 
     # symlinks for geonames.org data package
 
-    if [ ! -h /var/lib/newscoop/install/sql/CityLocations.csv ] && [ -e /usr/share/geonames-city-data/CityLocations.csv ]; then
-       ln -s /usr/share/geonames-city-data/CityLocations.csv /var/lib/newscoop/install/sql/CityLocations.csv
+    if [ ! -h /var/lib/newscoop/install/Resources/sql/CityLocations.csv ] && [ -e /usr/share/geonames-city-data/CityLocations.csv ]; then
+       ln -s /usr/share/geonames-city-data/CityLocations.csv /var/lib/newscoop/install/Resources/sql/CityLocations.csv
     fi
 
-    if [ ! -h /var/lib/newscoop/install/sql/CityNames.csv ] && [ -e /usr/share/geonames-city-data/CityNames.csv ]; then
-       ln -s /usr/share/geonames-city-data/CityNames.csv /var/lib/newscoop/install/sql/CityNames.csv
+    if [ ! -h /var/lib/newscoop/install/Resources/sql/CityNames.csv ] && [ -e /usr/share/geonames-city-data/CityNames.csv ]; then
+       ln -s /usr/share/geonames-city-data/CityNames.csv /var/lib/newscoop/install/Resources/sql/CityNames.csv
+    fi
+
+    # workaround for CS-5577
+
+    if [ -d /var/lib/newscoop/cache/ ]; then
+    echo "Removing old files from cache..."
+       rm -r /var/lib/newscoop/cache/*
     fi
 
     servers="apache2"
